@@ -1,0 +1,37 @@
+name: lctih
+version: 1.0.0
+
+synapse_minversion: [ 2, 101, 0 ]
+
+genopts:
+  dotstorm: true
+
+author:
+  name: stvrsxz
+  url: https://github.com/stvrsxz/synapse-lctih
+
+desc: A Little CTI Helper Synapse Rapid Power-Up.
+
+perms:
+  - perm: [ power-ups, lctih, user ]
+    gate: cortex
+    desc: Controls user access to the lctih power-up.
+
+
+# TODO: fix all names and descriptions of modules and commands
+modules:
+  - name: lctih.explore
+#  - name: lctih.pivot.sources
+#  - name: lctih.update.misp.clusters
+
+
+commands:
+  - name: lctih.explore
+    descr: Given a node, pivot in and walk, pivot out and walk and in the end pivot to tags.
+
+#  - name: lctih.show.pivot.sources
+#    descr: Given a node, print or call the api of possible online sources for relevant pivoting.
+#
+#  - name: lctih.update.misp.clusters
+#    descr: Update the MISP clusters in the cortex. Mainly used for threat actor clusters.
+

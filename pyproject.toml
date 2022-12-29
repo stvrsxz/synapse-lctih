@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "synapse-lctih"
+version = "1.0.0"
+description = "A Little CTI Helper Synapse Rapid Power-Up"
+authors = ["stvrsxz"]
+readme = "README.md"
+packages = [{include = "synapse_lctih"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pytest = "^7.2.0"
+synapse = "^2.116.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
