@@ -6,3 +6,15 @@ function is_in_list(value, list) {
     }
     return($lib.false)
 }
+
+function get_value_or_repr(node) {
+    switch $node.form() {
+        "inet:ipv4": {
+            $value = $node.repr()
+        }
+        *: {
+            $value = $node.value()
+        }
+    }
+    return($value)
+}

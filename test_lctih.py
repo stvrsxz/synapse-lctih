@@ -60,12 +60,36 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint(
                 "https://www.google.com/search?q=site:example.com", msgs
             )
+            self.stormIsInPrint(
+                "https://otx.alienvault.com/browse/global/pulses?q=example.com", msgs
+            )
+            self.stormIsInPrint(
+                "https://www.virustotal.com/gui/search/example.com", msgs
+            )
+            self.stormIsInPrint(
+                "https://orkl.eu/search", msgs
+            )
+            self.stormIsInPrint(
+                "https://www.threatminer.org/", msgs
+            )
 
             await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
             msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
             self.stormHasNoWarnErr(msgs)
             self.stormIsInPrint("https://www.google.com/search?q=site:1.2.3.4", msgs)
             self.stormIsInPrint('https://www.google.com/search?q="1.2.3.4"', msgs)
+            self.stormIsInPrint(
+                "https://otx.alienvault.com/browse/global/pulses?q=1.2.3.4", msgs
+            )
+            self.stormIsInPrint(
+                "https://www.virustotal.com/gui/search/1.2.3.4", msgs
+            )
+            self.stormIsInPrint(
+                "https://orkl.eu/search", msgs
+            )
+            self.stormIsInPrint(
+                "https://www.threatminer.org/", msgs
+            )
 
             await core.nodes("[ hash:md5 =  393f175d3782d4f6b1d215bd0f31a777  ]")
             msgs = await core.stormlist(
@@ -75,6 +99,18 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint(
                 'https://www.google.com/search?q="393f175d3782d4f6b1d215bd0f31a777"',
                 msgs,
+            )
+            self.stormIsInPrint(
+                "https://otx.alienvault.com/browse/global/pulses?q=393f175d3782d4f6b1d215bd0f31a777", msgs
+            )
+            self.stormIsInPrint(
+                "https://www.virustotal.com/gui/search/393f175d3782d4f6b1d215bd0f31a777", msgs
+            )
+            self.stormIsInPrint(
+                "https://orkl.eu/search", msgs
+            )
+            self.stormIsInPrint(
+                "https://www.threatminer.org/", msgs
             )
 
             await core.nodes(

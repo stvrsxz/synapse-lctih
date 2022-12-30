@@ -5,16 +5,36 @@ init {
 function getGoogleSources(node) {
     switch $node.form() {
         "inet:fqdn": {
-            $lib.print("https://www.google.com/search?q=site:{ioc}", ioc=$node.value()) | spin
+            $lib.print("https://www.google.com/search?q=site:{value}", value=$node.value()) | spin
         }
         "inet:ipv4": {
-            $lib.print("https://www.google.com/search?q=site:{ioc}", ioc=$node.repr())
-            $lib.print('https://www.google.com/search?q="{ioc}"', ioc=$node.repr()) | spin
+            $lib.print("https://www.google.com/search?q=site:{value}", value=$node.repr())
+            $lib.print('https://www.google.com/search?q="{value}"', value=$node.repr()) | spin
         }
         *: {
-            $lib.print('https://www.google.com/search?q="{ioc}"', ioc=$node.value()) | spin
+            $lib.print('https://www.google.com/search?q="{value}"', value=$utils.get_value_or_repr($node)) | spin
         }
     }
+    return($lib.null)
+}
+
+function getAlienaultSources(node) {
+    $lib.print("https://otx.alienvault.com/browse/global/pulses?q={value}", value=$utils.get_value_or_repr($node)) | spin
+    return($lib.null)
+}
+
+function getVirusTotalSources(node) {
+    $lib.print("https://www.virustotal.com/gui/search/{value}", value=$utils.get_value_or_repr($node)) | spin
+    return($lib.null)
+}
+
+function getORKLSources(node) {
+    $lib.print("https://orkl.eu/search") | spin
+    return($lib.null)
+}
+
+function getThreatMinerSources(node) {
+    $lib.print("https://www.threatminer.org/") | spin
     return($lib.null)
 }
 
@@ -30,4 +50,8 @@ function generatePivotingSources(node) {
     }
 
     $getGoogleSources($node)
+    $getAlienaultSources($node)
+    $getVirusTotalSources($node)
+    $getORKLSources($node)
+    $getThreatMinerSources($node)
 }
