@@ -48,3 +48,47 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint("Pivoting to tags", msgs)
 
             self.stormHasNoWarnErr(msgs)
+
+    async def test_lctih_pivoting_sources(self):
+
+        async with self.getTestCore() as core:
+            await core.nodes("[ inet:fqdn = example.com ]")
+            msgs = await core.stormlist(
+                "inet:fqdn=example.com | lctih.pivoting.sources"
+            )
+            self.stormHasNoWarnErr(msgs)
+            self.stormIsInPrint(
+                "https://www.google.com/search?q=site:example.com", msgs
+            )
+
+            await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
+            msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
+            self.stormHasNoWarnErr(msgs)
+            self.stormIsInPrint("https://www.google.com/search?q=site:1.2.3.4", msgs)
+            self.stormIsInPrint('https://www.google.com/search?q="1.2.3.4"', msgs)
+
+            await core.nodes("[ hash:md5 =  393f175d3782d4f6b1d215bd0f31a777  ]")
+            msgs = await core.stormlist(
+                "hash:md5 =  393f175d3782d4f6b1d215bd0f31a777 | lctih.pivoting.sources"
+            )
+            self.stormHasNoWarnErr(msgs)
+            self.stormIsInPrint(
+                'https://www.google.com/search?q="393f175d3782d4f6b1d215bd0f31a777"',
+                msgs,
+            )
+
+            await core.nodes(
+                "[ hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333  ]"
+            )
+            msgs = await core.stormlist(
+                "hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333 | lctih.pivoting.sources"
+            )
+            self.stormHasNoWarnErr(msgs)
+
+            await core.nodes(
+                "[ hash:sha256 =  d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6  ]"
+            )
+            msgs = await core.stormlist(
+                "hash:sha256 =  d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6 | lctih.pivoting.sources"
+            )
+            self.stormHasNoWarnErr(msgs)

@@ -18,20 +18,20 @@ perms:
     desc: Controls user access to the lctih power-up.
 
 
-# TODO: fix all names and descriptions of modules and commands
 modules:
-  - name: lctih.explore
-#  - name: lctih.pivot.sources
-#  - name: lctih.update.misp.clusters
+  - name: lctih.pivoting.sources
+  - name: lctih.utils
+  - name: lctih.update.misp.clusters
 
 
 commands:
   - name: lctih.explore
     descr: Given a node, pivot in and walk, pivot out and walk and in the end pivot to tags.
 
-#  - name: lctih.show.pivot.sources
-#    descr: Given a node, print or call the api of possible online sources for relevant pivoting.
-#
-#  - name: lctih.update.misp.clusters
-#    descr: Update the MISP clusters in the cortex. Mainly used for threat actor clusters.
+  - name: lctih.pivoting.sources
+    descr: Given a node, print the url or call the api of possible pivoting online sources
 
+  - name: lctih.update.misp.clusters
+    descr: |
+      Update the MISP galaxy threat actor cluster.
+      TODO: add more clusters

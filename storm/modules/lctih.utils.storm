@@ -1,0 +1,8 @@
+function is_in_list(value, list) {
+    for $item in $list {
+        if ($item = $value) {
+            return($lib.true)
+        }
+    }
+    return($lib.false)
+}

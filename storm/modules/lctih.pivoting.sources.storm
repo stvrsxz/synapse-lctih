@@ -1,0 +1,33 @@
+init {
+    $utils = $lib.import(lctih.utils)
+}
+
+function getGoogleSources(node) {
+    switch $node.form() {
+        "inet:fqdn": {
+            $lib.print("https://www.google.com/search?q=site:{ioc}", ioc=$node.value()) | spin
+        }
+        "inet:ipv4": {
+            $lib.print("https://www.google.com/search?q=site:{ioc}", ioc=$node.repr())
+            $lib.print('https://www.google.com/search?q="{ioc}"', ioc=$node.repr()) | spin
+        }
+        *: {
+            $lib.print('https://www.google.com/search?q="{ioc}"', ioc=$node.value()) | spin
+        }
+    }
+    return($lib.null)
+}
+
+function generatePivotingSources(node) {
+    if (not $node) {
+        return($lib.null)
+    }
+
+    // Generate sources only for specific form types:
+    $type = $node.form()
+    if (not $utils.is_in_list($type, ('inet:fqdn', 'inet:ipv4', 'hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        return($lib.null)
+    }
+
+    $getGoogleSources($node)
+}
