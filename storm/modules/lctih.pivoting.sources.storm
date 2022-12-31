@@ -2,19 +2,15 @@ init {
     $utils = $lib.import(lctih.utils)
 }
 
+// TODO: Eventually, migrate some sources to the respective APIs
+
 function getGoogleSources(node) {
-    switch $node.form() {
-        "inet:fqdn": {
-            $lib.print("https://www.google.com/search?q=site:{value}", value=$node.value()) | spin
-        }
-        "inet:ipv4": {
-            $lib.print("https://www.google.com/search?q=site:{value}", value=$node.repr())
-            $lib.print('https://www.google.com/search?q="{value}"', value=$node.repr()) | spin
-        }
-        *: {
-            $lib.print('https://www.google.com/search?q="{value}"', value=$utils.get_value_or_repr($node)) | spin
-        }
+    if ($utils.is_in_list($node.form(), ('inet:fqdn', 'inet:ipv4'))) {
+        $lib.print("https://www.google.com/search?q=site:{value}", value=$utils.get_value_or_repr($node))
     }
+
+    $lib.print('https://www.google.com/search?q="{value}"', value=$utils.get_value_or_repr($node)) | spin
+
     return($lib.null)
 }
 
@@ -38,6 +34,16 @@ function getThreatMinerSources(node) {
     return($lib.null)
 }
 
+function getIPInfoSources(node) {
+    $lib.print("https://ipinfo.io/{value}", value=$node.repr()) | spin
+    return($lib.null)
+}
+
+function getTwitterSources(node) {
+    $lib.print('https://twitter.com/search?q="{value}"&f=live', value=$utils.get_value_or_repr($node)) | spin
+    return($lib.null)
+}
+
 function generatePivotingSources(node) {
     if (not $node) {
         return($lib.null)
@@ -54,4 +60,6 @@ function generatePivotingSources(node) {
     $getVirusTotalSources($node)
     $getORKLSources($node)
     $getThreatMinerSources($node)
+    $getIPInfoSources($node)
+    $getTwitterSources($node)
 }

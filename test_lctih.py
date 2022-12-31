@@ -50,6 +50,7 @@ class LctihTest(s_test.StormPkgTest):
             self.stormHasNoWarnErr(msgs)
 
     async def test_lctih_pivoting_sources(self):
+        # TODO: Refactor this monstrosity of a test :)
 
         async with self.getTestCore() as core:
             await core.nodes("[ inet:fqdn = example.com ]")
@@ -60,18 +61,16 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint(
                 "https://www.google.com/search?q=site:example.com", msgs
             )
+            self.stormIsInPrint('https://www.google.com/search?q="example.com"', msgs)
             self.stormIsInPrint(
                 "https://otx.alienvault.com/browse/global/pulses?q=example.com", msgs
             )
             self.stormIsInPrint(
                 "https://www.virustotal.com/gui/search/example.com", msgs
             )
-            self.stormIsInPrint(
-                "https://orkl.eu/search", msgs
-            )
-            self.stormIsInPrint(
-                "https://www.threatminer.org/", msgs
-            )
+            self.stormIsInPrint("https://orkl.eu/search", msgs)
+            self.stormIsInPrint("https://www.threatminer.org/", msgs)
+            self.stormIsInPrint('https://twitter.com/search?q="example.com"&f=live', msgs)
 
             await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
             msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
@@ -81,15 +80,11 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint(
                 "https://otx.alienvault.com/browse/global/pulses?q=1.2.3.4", msgs
             )
-            self.stormIsInPrint(
-                "https://www.virustotal.com/gui/search/1.2.3.4", msgs
-            )
-            self.stormIsInPrint(
-                "https://orkl.eu/search", msgs
-            )
-            self.stormIsInPrint(
-                "https://www.threatminer.org/", msgs
-            )
+            self.stormIsInPrint("https://www.virustotal.com/gui/search/1.2.3.4", msgs)
+            self.stormIsInPrint("https://orkl.eu/search", msgs)
+            self.stormIsInPrint("https://www.threatminer.org/", msgs)
+            self.stormIsInPrint("https://ipinfo.io/1.2.3.4", msgs)
+            self.stormIsInPrint('https://twitter.com/search?q="1.2.3.4"&f=live', msgs)
 
             await core.nodes("[ hash:md5 =  393f175d3782d4f6b1d215bd0f31a777  ]")
             msgs = await core.stormlist(
@@ -101,17 +96,16 @@ class LctihTest(s_test.StormPkgTest):
                 msgs,
             )
             self.stormIsInPrint(
-                "https://otx.alienvault.com/browse/global/pulses?q=393f175d3782d4f6b1d215bd0f31a777", msgs
+                "https://otx.alienvault.com/browse/global/pulses?q=393f175d3782d4f6b1d215bd0f31a777",
+                msgs,
             )
             self.stormIsInPrint(
-                "https://www.virustotal.com/gui/search/393f175d3782d4f6b1d215bd0f31a777", msgs
+                "https://www.virustotal.com/gui/search/393f175d3782d4f6b1d215bd0f31a777",
+                msgs,
             )
-            self.stormIsInPrint(
-                "https://orkl.eu/search", msgs
-            )
-            self.stormIsInPrint(
-                "https://www.threatminer.org/", msgs
-            )
+            self.stormIsInPrint("https://orkl.eu/search", msgs)
+            self.stormIsInPrint("https://www.threatminer.org/", msgs)
+            self.stormIsInPrint('https://twitter.com/search?q="393f175d3782d4f6b1d215bd0f31a777"&f=live', msgs)
 
             await core.nodes(
                 "[ hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333  ]"
