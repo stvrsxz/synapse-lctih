@@ -14,6 +14,16 @@ function getGoogleSources(node) {
     return($lib.null)
 }
 
+function getDuckDuckGoSources(node) {
+    if ($utils.is_in_list($node.form(), ('inet:fqdn', 'inet:ipv4'))) {
+        $lib.print("https://duckduckgo.com/?q=site:{value}", value=$utils.get_value_or_repr($node))
+    }
+
+    $lib.print('https://duckduckgo.com/?q="{value}"', value=$utils.get_value_or_repr($node)) | spin
+
+    return($lib.null)
+}
+
 function getAlienaultSources(node) {
     $lib.print("https://otx.alienvault.com/browse/global/pulses?q={value}", value=$utils.get_value_or_repr($node)) | spin
     return($lib.null)
@@ -56,6 +66,7 @@ function generatePivotingSources(node) {
     }
 
     $getGoogleSources($node)
+    $getDuckDuckGoSources($node)
     $getAlienaultSources($node)
     $getVirusTotalSources($node)
     $getORKLSources($node)

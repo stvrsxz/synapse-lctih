@@ -63,6 +63,10 @@ class LctihTest(s_test.StormPkgTest):
             )
             self.stormIsInPrint('https://www.google.com/search?q="example.com"', msgs)
             self.stormIsInPrint(
+                "https://duckduckgo.com/?q=site:example.com", msgs
+            )
+            self.stormIsInPrint('https://duckduckgo.com/?q="example.com"', msgs)
+            self.stormIsInPrint(
                 "https://otx.alienvault.com/browse/global/pulses?q=example.com", msgs
             )
             self.stormIsInPrint(
@@ -77,6 +81,8 @@ class LctihTest(s_test.StormPkgTest):
             self.stormHasNoWarnErr(msgs)
             self.stormIsInPrint("https://www.google.com/search?q=site:1.2.3.4", msgs)
             self.stormIsInPrint('https://www.google.com/search?q="1.2.3.4"', msgs)
+            self.stormIsInPrint("https://duckduckgo.com/?q=site:1.2.3.4", msgs)
+            self.stormIsInPrint('https://duckduckgo.com/?q="1.2.3.4"', msgs)
             self.stormIsInPrint(
                 "https://otx.alienvault.com/browse/global/pulses?q=1.2.3.4", msgs
             )
