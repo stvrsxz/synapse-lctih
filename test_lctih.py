@@ -62,9 +62,7 @@ class LctihTest(s_test.StormPkgTest):
                 "https://www.google.com/search?q=site:example.com", msgs
             )
             self.stormIsInPrint('https://www.google.com/search?q="example.com"', msgs)
-            self.stormIsInPrint(
-                "https://duckduckgo.com/?q=site:example.com", msgs
-            )
+            self.stormIsInPrint("https://duckduckgo.com/?q=site:example.com", msgs)
             self.stormIsInPrint('https://duckduckgo.com/?q="example.com"', msgs)
             self.stormIsInPrint(
                 "https://otx.alienvault.com/browse/global/pulses?q=example.com", msgs
@@ -74,7 +72,9 @@ class LctihTest(s_test.StormPkgTest):
             )
             self.stormIsInPrint("https://orkl.eu/search", msgs)
             self.stormIsInPrint("https://www.threatminer.org/", msgs)
-            self.stormIsInPrint('https://twitter.com/search?q="example.com"&f=live', msgs)
+            self.stormIsInPrint(
+                'https://twitter.com/search?q="example.com"&f=live', msgs
+            )
 
             await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
             msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
@@ -111,7 +111,10 @@ class LctihTest(s_test.StormPkgTest):
             )
             self.stormIsInPrint("https://orkl.eu/search", msgs)
             self.stormIsInPrint("https://www.threatminer.org/", msgs)
-            self.stormIsInPrint('https://twitter.com/search?q="393f175d3782d4f6b1d215bd0f31a777"&f=live', msgs)
+            self.stormIsInPrint(
+                'https://twitter.com/search?q="393f175d3782d4f6b1d215bd0f31a777"&f=live',
+                msgs,
+            )
 
             await core.nodes(
                 "[ hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333  ]"
@@ -127,4 +130,17 @@ class LctihTest(s_test.StormPkgTest):
             msgs = await core.stormlist(
                 "hash:sha256 =  d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6 | lctih.pivoting.sources"
             )
+            self.stormHasNoWarnErr(msgs)
+
+    async def test_lctih_update_misp_clusters(self):
+
+        async with self.getTestCore() as core:
+
+            # TODO: Finish and refactor this test
+
+            nodes = await core.nodes("lctih.update.misp.clusters")
+            msgs = await core.stormlist("lctih.update.misp.clusters")
+
+            self.stormIsInPrint("Threat Actor", msgs)
+
             self.stormHasNoWarnErr(msgs)
