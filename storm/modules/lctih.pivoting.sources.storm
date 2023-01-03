@@ -45,12 +45,34 @@ function getThreatMinerSources(node) {
 }
 
 function getIPInfoSources(node) {
-    $lib.print("https://ipinfo.io/{value}", value=$node.repr()) | spin
+    if ($node.form() = 'inet:ipv4') {
+        $lib.print("https://ipinfo.io/{value}", value=$node.repr()) | spin
+    }
     return($lib.null)
 }
 
 function getTwitterSources(node) {
     $lib.print('https://twitter.com/search?q="{value}"&f=live', value=$utils.get_value_or_repr($node)) | spin
+    return($lib.null)
+}
+
+function getGitHubSources(node) {
+    $lib.print('https://github.com/search?q="{value}"', value=$utils.get_value_or_repr($node)) | spin
+    return($lib.null)
+}
+
+function getCompleteDNSSources(node) {
+    $lib.print("https://completedns.com/dns-history/") | spin
+    return($lib.null)
+}
+
+function getVXUndergroundSources(node) {
+    $lib.print("https://www.vx-underground.org/malware.html") | spin
+    return($lib.null)
+}
+
+function getRiskIQSources(node) {
+    $lib.print("https://community.riskiq.com/research?query={value}", value=$utils.get_value_or_repr($node)) | spin
     return($lib.null)
 }
 
@@ -73,4 +95,8 @@ function generatePivotingSources(node) {
     $getThreatMinerSources($node)
     $getIPInfoSources($node)
     $getTwitterSources($node)
+    $getGitHubSources($node)
+    $getCompleteDNSSources($node)
+    $getVXUndergroundSources($node)
+    $getRiskIQSources($node)
 }

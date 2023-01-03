@@ -50,7 +50,7 @@ class LctihTest(s_test.StormPkgTest):
             self.stormHasNoWarnErr(msgs)
 
     async def test_lctih_pivoting_sources(self):
-        # TODO: Refactor this monstrosity of a test :)
+        # TODO: Refactor this monstrosity of a test :) make it more dynamic
 
         async with self.getTestCore() as core:
             await core.nodes("[ inet:fqdn = example.com ]")
@@ -75,6 +75,11 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint(
                 'https://twitter.com/search?q="example.com"&f=live', msgs
             )
+            self.stormIsInPrint('https://github.com/search?q="example.com"', msgs)
+            self.stormIsInPrint("https://completedns.com/dns-history/", msgs)
+            self.stormIsInPrint(
+                "https://community.riskiq.com/research?query=example.com", msgs
+            )
 
             await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
             msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
@@ -91,6 +96,10 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint("https://www.threatminer.org/", msgs)
             self.stormIsInPrint("https://ipinfo.io/1.2.3.4", msgs)
             self.stormIsInPrint('https://twitter.com/search?q="1.2.3.4"&f=live', msgs)
+            self.stormIsInPrint('https://github.com/search?q="1.2.3.4"', msgs)
+            self.stormIsInPrint(
+                "https://community.riskiq.com/research?query=1.2.3.4", msgs
+            )
 
             await core.nodes("[ hash:md5 =  393f175d3782d4f6b1d215bd0f31a777  ]")
             msgs = await core.stormlist(
@@ -111,9 +120,16 @@ class LctihTest(s_test.StormPkgTest):
             )
             self.stormIsInPrint("https://orkl.eu/search", msgs)
             self.stormIsInPrint("https://www.threatminer.org/", msgs)
+            self.stormIsInPrint("https://www.vx-underground.org/malware.html", msgs)
             self.stormIsInPrint(
                 'https://twitter.com/search?q="393f175d3782d4f6b1d215bd0f31a777"&f=live',
                 msgs,
+            )
+            self.stormIsInPrint(
+                'https://github.com/search?q="393f175d3782d4f6b1d215bd0f31a777"', msgs
+            )
+            self.stormIsInPrint(
+                "https://community.riskiq.com/research?query=393f175d3782d4f6b1d215bd0f31a777", msgs
             )
 
             await core.nodes(
