@@ -23,7 +23,7 @@ jobs:
       uses: snok/install-poetry@v1.3.3
     - name: Install dependencies
       run: |
-        poetry install
+        poetry install --no-root
     - name: Test with pytest
       run: |
         pytest -svx test_lctih.py
