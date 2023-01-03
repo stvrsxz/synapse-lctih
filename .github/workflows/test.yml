@@ -26,4 +26,4 @@ jobs:
         poetry install --no-root
     - name: Test with pytest
       run: |
-        pytest -svx test_lctih.py
+        poetry run pytest -svx test_lctih.py
