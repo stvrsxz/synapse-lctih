@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Python application
+name: test synapse-lctih
 
 on:
   push:
@@ -14,7 +11,6 @@ permissions:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -23,10 +19,11 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+    - name: Install Poetry Action
+      uses: snok/install-poetry@v1.3.3
     - name: Install dependencies
       run: |
-        curl -sSL https://install.python-poetry.org | python -
-        poetry install
+        poetry install --no-root
     - name: Test with pytest
       run: |
-        pytest -svx test_lctih.py
+        poetry run pytest -svx test_lctih.py
