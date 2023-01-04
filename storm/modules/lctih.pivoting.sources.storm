@@ -76,6 +76,31 @@ function getRiskIQSources(node) {
     return($lib.null)
 }
 
+function getURLScanSources(node) {
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("https://urlscan.io/search/#{value}", value=$node.value()) | spin
+    }
+    return($lib.null)
+}
+
+function getHybridAnalysisSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://www.hybrid-analysis.com/search?query={value}", value=$node.value()) | spin
+    }
+
+    // TODO: Add "https://www.hybrid-analysis.com/string-search", for strings
+
+    return($lib.null)
+}
+
+function getVirusShareSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://virusshare.com") | spin
+    }
+
+    return($lib.null)
+}
+
 function generatePivotingSources(node) {
     if (not $node) {
         return($lib.null)
@@ -99,4 +124,7 @@ function generatePivotingSources(node) {
     $getCompleteDNSSources($node)
     $getVXUndergroundSources($node)
     $getRiskIQSources($node)
+    $getURLScanSources($node)
+    $getHybridAnalysisSources($node)
+    $getVirusShareSources($node)
 }

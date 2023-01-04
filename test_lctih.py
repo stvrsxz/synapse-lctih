@@ -80,6 +80,7 @@ class LctihTest(s_test.StormPkgTest):
             self.stormIsInPrint(
                 "https://community.riskiq.com/research?query=example.com", msgs
             )
+            self.stormIsInPrint("https://urlscan.io/search/#example.com", msgs)
 
             await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
             msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
@@ -129,8 +130,16 @@ class LctihTest(s_test.StormPkgTest):
                 'https://github.com/search?q="393f175d3782d4f6b1d215bd0f31a777"', msgs
             )
             self.stormIsInPrint(
-                "https://community.riskiq.com/research?query=393f175d3782d4f6b1d215bd0f31a777", msgs
+                "https://community.riskiq.com/research?query=393f175d3782d4f6b1d215bd0f31a777",
+                msgs,
             )
+
+            self.stormIsInPrint(
+                "https://www.hybrid-analysis.com/search?query=393f175d3782d4f6b1d215bd0f31a777",
+                msgs,
+            )
+
+            self.stormIsInPrint("https://virusshare.com", msgs)
 
             await core.nodes(
                 "[ hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333  ]"
