@@ -101,6 +101,38 @@ function getVirusShareSources(node) {
     return($lib.null)
 }
 
+function getAnyRunSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://app.any.run/submissions") | spin
+    }
+
+    return($lib.null)
+}
+
+function getCRTSHSources(node) {
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("https://crt.sh/?q={value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getWhoIsSources(node) {
+    if ($node.form() = 'inet:ipv4') {
+        $lib.print("https://who.is/whois-ip/ip-address/{value}", value=$node.repr()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getWhoxySources(node) {
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("https://www.whoxy.com/{value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
 function generatePivotingSources(node) {
     if (not $node) {
         return($lib.null)
@@ -127,4 +159,8 @@ function generatePivotingSources(node) {
     $getURLScanSources($node)
     $getHybridAnalysisSources($node)
     $getVirusShareSources($node)
+    $getAnyRunSources($node)
+    $getCRTSHSources($node)
+    $getWhoIsSources($node)
+    $getWhoxySources($node)
 }
