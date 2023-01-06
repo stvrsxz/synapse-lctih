@@ -52,7 +52,7 @@ class LctihTest(s_test.StormPkgTest):
     async def test_lctih_pivoting_sources(self):
         async with self.getTestCore() as core:
             msgs = []
-            ioc_variable_names = []
+            searchable_variable_names = []
 
             fqdn = "example.com"
             await core.nodes(f"[ inet:fqdn = {fqdn} ]")
@@ -60,7 +60,7 @@ class LctihTest(s_test.StormPkgTest):
                 f"inet:fqdn={fqdn} | lctih.pivoting.sources"
             )
             msgs.extend(fqdn_msgs)
-            ioc_variable_names.append("fqdn")
+            searchable_variable_names.append("fqdn")
 
             ipv4 = "1.2.3.4"
             await core.nodes(f"[ inet:ipv4 = {ipv4} ]")
@@ -68,13 +68,13 @@ class LctihTest(s_test.StormPkgTest):
                 f"inet:ipv4={ipv4} | lctih.pivoting.sources"
             )
             msgs.extend(ipv4_msgs)
-            ioc_variable_names.append("ipv4")
+            searchable_variable_names.append("ipv4")
 
             md5 = "393f175d3782d4f6b1d215bd0f31a777"
             await core.nodes(f"[ hash:md5 = {md5} ]")
             md5_msgs = await core.stormlist(f"hash:md5={md5} | lctih.pivoting.sources")
             msgs.extend(md5_msgs)
-            ioc_variable_names.append("md5")
+            searchable_variable_names.append("md5")
 
             sha1 = "e281722ebc73be5ecfca93b3395ba745ec354333"
             await core.nodes(f"[ hash:sha1 =  {sha1} ]")
@@ -82,7 +82,7 @@ class LctihTest(s_test.StormPkgTest):
                 f"hash:sha1={sha1} | lctih.pivoting.sources"
             )
             msgs.extend(sha1_msgs)
-            ioc_variable_names.append("sha1")
+            searchable_variable_names.append("sha1")
 
             sha256 = "d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6"
             await core.nodes(f"[ hash:sha256 = {sha256} ]")
@@ -90,7 +90,7 @@ class LctihTest(s_test.StormPkgTest):
                 f"hash:sha256={sha256} | lctih.pivoting.sources"
             )
             msgs.extend(sha256_msgs)
-            ioc_variable_names.append("sha256")
+            searchable_variable_names.append("sha256")
 
             email = "test@example.com"
             await core.nodes(f"[ inet:email = {email} ]")
@@ -98,7 +98,7 @@ class LctihTest(s_test.StormPkgTest):
                 f"inet:email={email} | lctih.pivoting.sources"
             )
             msgs.extend(email_msgs)
-            ioc_variable_names.append("email")
+            searchable_variable_names.append("email")
 
             url = "https://example.com"
             await core.nodes(f"[ inet:url = '{url}' ]")
@@ -106,7 +106,7 @@ class LctihTest(s_test.StormPkgTest):
                 f"inet:url='{url}' | lctih.pivoting.sources"
             )
             msgs.extend(url_msgs)
-            ioc_variable_names.append("url")
+            searchable_variable_names.append("url")
 
             yara_rule = 'rule test {strings: $a = "test" condition: $a}'
             await core.nodes(f"[ it:app:yara:rule = * :text='{yara_rule}' ]")
@@ -121,18 +121,18 @@ class LctihTest(s_test.StormPkgTest):
 
             sources_to_variable_names = {
                 "https://www.google.com/search?q=site:{value}": ["fqdn", "ipv4"],
-                'https://www.google.com/search?q="{value}"': ioc_variable_names,
+                'https://www.google.com/search?q="{value}"': searchable_variable_names,
                 "https://duckduckgo.com/?q=site:{value}": ["fqdn", "ipv4"],
-                'https://duckduckgo.com/?q="{value}"': ioc_variable_names,
-                "https://otx.alienvault.com/browse/global/pulses?q={value}": ioc_variable_names,
-                "https://www.virustotal.com/gui/search/{value}": ioc_variable_names,
-                "https://labs.inquest.net/": ioc_variable_names,
-                "https://orkl.eu/search": ioc_variable_names,
-                "https://www.threatminer.org/": ioc_variable_names,
-                'https://twitter.com/search?q="{value}"&f=live': ioc_variable_names,
-                'https://github.com/search?q="{value}"': ioc_variable_names,
-                "https://pulsedive.com/": ioc_variable_names,
-                "https://hn.algolia.com/?dateRange=all&page=0&prefix=true&query={value}&sort=byPopularity&type=all": ioc_variable_names,
+                'https://duckduckgo.com/?q="{value}"': searchable_variable_names,
+                "https://otx.alienvault.com/browse/global/pulses?q={value}": searchable_variable_names,
+                "https://www.virustotal.com/gui/search/{value}": searchable_variable_names,
+                "https://labs.inquest.net/": searchable_variable_names,
+                "https://orkl.eu/search": searchable_variable_names,
+                "https://www.threatminer.org/": searchable_variable_names,
+                'https://twitter.com/search?q="{value}"&f=live': searchable_variable_names,
+                'https://github.com/search?q="{value}"': searchable_variable_names,
+                "https://pulsedive.com/": searchable_variable_names,
+                "https://hn.algolia.com/?dateRange=all&page=0&prefix=true&query={value}&sort=byPopularity&type=all": searchable_variable_names,
                 "https://urlscan.io/search/#{value}": ["fqdn", "ipv4"],
                 'https://search.censys.io/search?resource=hosts&q="{value}"': [
                     "fqdn",
@@ -150,6 +150,8 @@ class LctihTest(s_test.StormPkgTest):
                 "https://archive.ph/*.{value}": ["fqdn"],
                 "https://securitytrails.com/domain/{value}/history/a": ["fqdn"],
                 "https://www.whoxy.com/{value}": ["fqdn"],
+                "https://www.whoxy.com/email/{value}": ["email"],
+                "https://viewdns.info/reversewhois/?q={value}": ["email"],
                 "https://www.robtex.com/dns-lookup/{value}": ["fqdn"],
                 "https://virusshare.com": ["md5", "sha1", "sha256"],
                 "https://app.any.run/submissions": ["md5", "sha1", "sha256"],
@@ -171,7 +173,7 @@ class LctihTest(s_test.StormPkgTest):
                     "sha1",
                     "sha256",
                 ],
-                "https://community.riskiq.com/research?query={value}": ioc_variable_names,
+                "https://community.riskiq.com/research?query={value}": searchable_variable_names,
                 "https://www.hybrid-analysis.com/yara-search": ["yara_rule"],
                 "https://bazaar.abuse.ch/account/": ["yara_rule"],
                 "https://urlhaus.abuse.ch/browse.php?search={value}": ["url"],

@@ -133,6 +133,11 @@ function getWhoxySources(node) {
         $lib.print("https://www.whoxy.com/{value}", value=$node.value()) | spin
     }
 
+    elif ($node.form() = 'inet:email') {
+        $lib.print("https://www.whoxy.com/email/{value}", value=$node.value()) | spin
+    }
+
+
     return($lib.null)
 }
 
@@ -261,7 +266,15 @@ function getUrlHausSources(node) {
     return($lib.null)
 }
 
-function generatePivotingSources(node) {
+function getViewDNSSources(node) {
+    if ($node.form() = 'inet:email') {
+        $lib.print("https://viewdns.info/reversewhois/?q={value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function generatePivotingSources(node, external) {
     if (not $node) {
         return($lib.null)
     }
@@ -307,4 +320,10 @@ function generatePivotingSources(node) {
     $getPulseDiveSources($node)
     $getInQuestSources($node)
     $getUrlHausSources($node)
+    $getViewDNSSources($node)
+
+    if ($external) {
+        // TODO: Call external sources here.
+    }
+
 }

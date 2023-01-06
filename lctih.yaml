@@ -31,6 +31,13 @@ commands:
   - name: lctih.pivoting.sources
     descr: Given a node, print the url or call the api of possible pivoting online sources
 
+    cmdargs:
+      - - --external
+        - type: bool
+          default: false
+          action: store_true
+          help: Call external APIs-Sources and print the results.
+
   - name: lctih.update.misp.clusters
     descr: |
       Update the MISP galaxy threat actor cluster.

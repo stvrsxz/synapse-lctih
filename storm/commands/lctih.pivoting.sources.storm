@@ -2,4 +2,4 @@ init {
     $pivoting = $lib.import(lctih.pivoting.sources)
 }
 
-$pivoting.generatePivotingSources($node) | spin
+$pivoting.generatePivotingSources($node, $cmdopts.external) | spin
