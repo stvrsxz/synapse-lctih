@@ -50,116 +50,139 @@ class LctihTest(s_test.StormPkgTest):
             self.stormHasNoWarnErr(msgs)
 
     async def test_lctih_pivoting_sources(self):
-        # TODO: Refactor this monstrosity of a test :) make it more dynamic
-
         async with self.getTestCore() as core:
-            await core.nodes("[ inet:fqdn = example.com ]")
-            msgs = await core.stormlist(
-                "inet:fqdn=example.com | lctih.pivoting.sources"
-            )
-            self.stormHasNoWarnErr(msgs)
-            self.stormIsInPrint(
-                "https://www.google.com/search?q=site:example.com", msgs
-            )
-            self.stormIsInPrint('https://www.google.com/search?q="example.com"', msgs)
-            self.stormIsInPrint("https://duckduckgo.com/?q=site:example.com", msgs)
-            self.stormIsInPrint('https://duckduckgo.com/?q="example.com"', msgs)
-            self.stormIsInPrint(
-                "https://otx.alienvault.com/browse/global/pulses?q=example.com", msgs
-            )
-            self.stormIsInPrint(
-                "https://www.virustotal.com/gui/search/example.com", msgs
-            )
-            self.stormIsInPrint("https://orkl.eu/search", msgs)
-            self.stormIsInPrint("https://www.threatminer.org/", msgs)
-            self.stormIsInPrint(
-                'https://twitter.com/search?q="example.com"&f=live', msgs
-            )
-            self.stormIsInPrint('https://github.com/search?q="example.com"', msgs)
-            self.stormIsInPrint("https://completedns.com/dns-history/", msgs)
-            self.stormIsInPrint(
-                "https://community.riskiq.com/research?query=example.com", msgs
-            )
-            self.stormIsInPrint("https://urlscan.io/search/#example.com", msgs)
-            self.stormIsInPrint("https://crt.sh/?q=example.com", msgs)
-            self.stormIsInPrint("https://www.whoxy.com/example.com", msgs)
+            msgs = []
+            ioc_variable_names = []
 
-            await core.nodes("[ inet:ipv4 = 1.2.3.4 ]")
-            msgs = await core.stormlist("inet:ipv4 = 1.2.3.4 | lctih.pivoting.sources")
-            self.stormHasNoWarnErr(msgs)
-            self.stormIsInPrint("https://www.google.com/search?q=site:1.2.3.4", msgs)
-            self.stormIsInPrint('https://www.google.com/search?q="1.2.3.4"', msgs)
-            self.stormIsInPrint("https://duckduckgo.com/?q=site:1.2.3.4", msgs)
-            self.stormIsInPrint('https://duckduckgo.com/?q="1.2.3.4"', msgs)
-            self.stormIsInPrint(
-                "https://otx.alienvault.com/browse/global/pulses?q=1.2.3.4", msgs
+            fqdn = "example.com"
+            await core.nodes(f"[ inet:fqdn = {fqdn} ]")
+            fqdn_msgs = await core.stormlist(
+                f"inet:fqdn={fqdn} | lctih.pivoting.sources"
             )
-            self.stormIsInPrint("https://www.virustotal.com/gui/search/1.2.3.4", msgs)
-            self.stormIsInPrint("https://orkl.eu/search", msgs)
-            self.stormIsInPrint("https://www.threatminer.org/", msgs)
-            self.stormIsInPrint("https://ipinfo.io/1.2.3.4", msgs)
-            self.stormIsInPrint('https://twitter.com/search?q="1.2.3.4"&f=live', msgs)
-            self.stormIsInPrint('https://github.com/search?q="1.2.3.4"', msgs)
-            self.stormIsInPrint(
-                "https://community.riskiq.com/research?query=1.2.3.4", msgs
-            )
-            self.stormIsInPrint("https://who.is/whois-ip/ip-address/1.2.3.4", msgs)
+            msgs.extend(fqdn_msgs)
+            ioc_variable_names.append("fqdn")
 
-            await core.nodes("[ hash:md5 =  393f175d3782d4f6b1d215bd0f31a777  ]")
-            msgs = await core.stormlist(
-                "hash:md5 =  393f175d3782d4f6b1d215bd0f31a777 | lctih.pivoting.sources"
+            ipv4 = "1.2.3.4"
+            await core.nodes(f"[ inet:ipv4 = {ipv4} ]")
+            ipv4_msgs = await core.stormlist(
+                f"inet:ipv4={ipv4} | lctih.pivoting.sources"
             )
-            self.stormHasNoWarnErr(msgs)
-            self.stormIsInPrint(
-                'https://www.google.com/search?q="393f175d3782d4f6b1d215bd0f31a777"',
-                msgs,
-            )
-            self.stormIsInPrint(
-                "https://otx.alienvault.com/browse/global/pulses?q=393f175d3782d4f6b1d215bd0f31a777",
-                msgs,
-            )
-            self.stormIsInPrint(
-                "https://www.virustotal.com/gui/search/393f175d3782d4f6b1d215bd0f31a777",
-                msgs,
-            )
-            self.stormIsInPrint("https://orkl.eu/search", msgs)
-            self.stormIsInPrint("https://www.threatminer.org/", msgs)
-            self.stormIsInPrint("https://www.vx-underground.org/malware.html", msgs)
-            self.stormIsInPrint(
-                'https://twitter.com/search?q="393f175d3782d4f6b1d215bd0f31a777"&f=live',
-                msgs,
-            )
-            self.stormIsInPrint(
-                'https://github.com/search?q="393f175d3782d4f6b1d215bd0f31a777"', msgs
-            )
-            self.stormIsInPrint(
-                "https://community.riskiq.com/research?query=393f175d3782d4f6b1d215bd0f31a777",
-                msgs,
-            )
+            msgs.extend(ipv4_msgs)
+            ioc_variable_names.append("ipv4")
 
-            self.stormIsInPrint(
-                "https://www.hybrid-analysis.com/search?query=393f175d3782d4f6b1d215bd0f31a777",
-                msgs,
-            )
+            md5 = "393f175d3782d4f6b1d215bd0f31a777"
+            await core.nodes(f"[ hash:md5 = {md5} ]")
+            md5_msgs = await core.stormlist(f"hash:md5={md5} | lctih.pivoting.sources")
+            msgs.extend(md5_msgs)
+            ioc_variable_names.append("md5")
 
-            self.stormIsInPrint("https://virusshare.com", msgs)
-            self.stormIsInPrint("https://app.any.run/submissions", msgs)
+            sha1 = "e281722ebc73be5ecfca93b3395ba745ec354333"
+            await core.nodes(f"[ hash:sha1 =  {sha1} ]")
+            sha1_msgs = await core.stormlist(
+                f"hash:sha1={sha1} | lctih.pivoting.sources"
+            )
+            msgs.extend(sha1_msgs)
+            ioc_variable_names.append("sha1")
 
-            await core.nodes(
-                "[ hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333  ]"
+            sha256 = "d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6"
+            await core.nodes(f"[ hash:sha256 = {sha256} ]")
+            sha256_msgs = await core.stormlist(
+                f"hash:sha256={sha256} | lctih.pivoting.sources"
             )
-            msgs = await core.stormlist(
-                "hash:sha1 =  e281722ebc73be5ecfca93b3395ba745ec354333 | lctih.pivoting.sources"
+            msgs.extend(sha256_msgs)
+            ioc_variable_names.append("sha256")
+
+            email = "test@example.com"
+            await core.nodes(f"[ inet:email = {email} ]")
+            email_msgs = await core.stormlist(
+                f"inet:email={email} | lctih.pivoting.sources"
             )
+            msgs.extend(email_msgs)
+            ioc_variable_names.append("email")
+
+            url = "https://example.com"
+            await core.nodes(f"[ inet:url = '{url}' ]")
+            url_msgs = await core.stormlist(
+                f"inet:url='{url}' | lctih.pivoting.sources"
+            )
+            msgs.extend(url_msgs)
+            ioc_variable_names.append("url")
+
+            yara_rule = 'rule test {strings: $a = "test" condition: $a}'
+            await core.nodes(f"[ it:app:yara:rule = * :text='{yara_rule}' ]")
+            yara_rule_msgs = await core.stormlist(
+                f"it:app:yara:rule:text ~= test | lctih.pivoting.sources"
+            )
+            msgs.extend(yara_rule_msgs)
+
+            # TODO: code snippets or strings + custom nodes?
+
             self.stormHasNoWarnErr(msgs)
 
-            await core.nodes(
-                "[ hash:sha256 =  d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6  ]"
-            )
-            msgs = await core.stormlist(
-                "hash:sha256 =  d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6 | lctih.pivoting.sources"
-            )
-            self.stormHasNoWarnErr(msgs)
+            sources_to_variable_names = {
+                "https://www.google.com/search?q=site:{value}": ["fqdn", "ipv4"],
+                'https://www.google.com/search?q="{value}"': ioc_variable_names,
+                "https://duckduckgo.com/?q=site:{value}": ["fqdn", "ipv4"],
+                'https://duckduckgo.com/?q="{value}"': ioc_variable_names,
+                "https://otx.alienvault.com/browse/global/pulses?q={value}": ioc_variable_names,
+                "https://www.virustotal.com/gui/search/{value}": ioc_variable_names,
+                "https://labs.inquest.net/": ioc_variable_names,
+                "https://orkl.eu/search": ioc_variable_names,
+                "https://www.threatminer.org/": ioc_variable_names,
+                'https://twitter.com/search?q="{value}"&f=live': ioc_variable_names,
+                'https://github.com/search?q="{value}"': ioc_variable_names,
+                "https://pulsedive.com/": ioc_variable_names,
+                "https://hn.algolia.com/?dateRange=all&page=0&prefix=true&query={value}&sort=byPopularity&type=all": ioc_variable_names,
+                "https://urlscan.io/search/#{value}": ["fqdn", "ipv4"],
+                'https://search.censys.io/search?resource=hosts&q="{value}"': [
+                    "fqdn",
+                    "ipv4",
+                ],
+                'https://search.censys.io/certificates?q="{value}"': ["fqdn", "ipv4"],
+                "https://intelx.io/?s={value}": ["fqdn", "ipv4", "email"],
+                "https://completedns.com/dns-history/": ["fqdn"],
+                "https://www.shodan.io/search?query=hostname:{value}": ["fqdn"],
+                "https://ipinfo.io/{value}": ["ipv4"],
+                "https://www.shodan.io/search?query=ip:{value}": ["ipv4"],
+                "https://who.is/whois-ip/ip-address/{value}": ["ipv4"],
+                "https://crt.sh/?q={value}": ["fqdn"],
+                "https://web.archive.org/web/*/{value}*": ["fqdn"],
+                "https://archive.ph/*.{value}": ["fqdn"],
+                "https://securitytrails.com/domain/{value}/history/a": ["fqdn"],
+                "https://www.whoxy.com/{value}": ["fqdn"],
+                "https://www.robtex.com/dns-lookup/{value}": ["fqdn"],
+                "https://virusshare.com": ["md5", "sha1", "sha256"],
+                "https://app.any.run/submissions": ["md5", "sha1", "sha256"],
+                "https://bazaar.abuse.ch/browse/": ["md5", "sha1", "sha256"],
+                "https://hashlookup.circl.lu/": ["md5", "sha1", "sha256"],
+                "https://malshare.com/search.php?query={value}": [
+                    "md5",
+                    "sha1",
+                    "sha256",
+                ],
+                "https://tria.ge/s?q={value}": ["md5", "sha1", "sha256"],
+                "https://www.vx-underground.org/malware.html": [
+                    "md5",
+                    "sha1",
+                    "sha256",
+                ],
+                "https://www.hybrid-analysis.com/search?query={value}": [
+                    "md5",
+                    "sha1",
+                    "sha256",
+                ],
+                "https://community.riskiq.com/research?query={value}": ioc_variable_names,
+                "https://www.hybrid-analysis.com/yara-search": ["yara_rule"],
+                "https://bazaar.abuse.ch/account/": ["yara_rule"],
+                "https://urlhaus.abuse.ch/browse.php?search={value}": ["url"],
+            }
+
+            for source, variable_names in sources_to_variable_names.items():
+                for variable_name in variable_names:
+                    self.stormIsInPrint(
+                        source.format(value=locals().get(variable_name)),
+                        locals().get(variable_name + "_msgs"),
+                    )
 
     async def test_lctih_update_misp_clusters(self):
 

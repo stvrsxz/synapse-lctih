@@ -77,8 +77,8 @@ function getRiskIQSources(node) {
 }
 
 function getURLScanSources(node) {
-    if ($node.form() = 'inet:fqdn') {
-        $lib.print("https://urlscan.io/search/#{value}", value=$node.value()) | spin
+    if ($utils.is_in_list($node.form(), ('inet:fqdn', 'inet:ipv4'))) {
+        $lib.print("https://urlscan.io/search/#{value}", value=$utils.get_value_or_repr($node)) | spin
     }
     return($lib.null)
 }
@@ -86,6 +86,9 @@ function getURLScanSources(node) {
 function getHybridAnalysisSources(node) {
     if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
         $lib.print("https://www.hybrid-analysis.com/search?query={value}", value=$node.value()) | spin
+    }
+    elif ($node.form() = 'it:app:yara:rule') {
+        $lib.print("https://www.hybrid-analysis.com/yara-search") | spin
     }
 
     // TODO: Add "https://www.hybrid-analysis.com/string-search", for strings
@@ -133,6 +136,131 @@ function getWhoxySources(node) {
     return($lib.null)
 }
 
+function getArchiveSources(node) {
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("https://web.archive.org/web/*/{value}*", value=$node.value())
+        $lib.print("https://archive.ph/*.{value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getSecurityTrailsSources(node) {
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("https://securitytrails.com/domain/{value}/history/a", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getAnyRunSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://app.any.run/submissions") | spin
+    }
+
+    return($lib.null)
+}
+
+function getBazaarAbuseSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://bazaar.abuse.ch/browse/") | spin
+    }
+    elif ($node.form() = 'it:app:yara:rule') {
+        $lib.print("https://bazaar.abuse.ch/account/") | spin
+    }
+
+    return($lib.null)
+}
+
+function getHashLookupCirclLuSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://hashlookup.circl.lu/") | spin
+    }
+
+    return($lib.null)
+}
+
+function getTriageSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://tria.ge/s?q={value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getMalShareSources(node) {
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://malshare.com/search.php?query={value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getCensysSources(node) {
+    if ($utils.is_in_list($node.form(), ('inet:fqdn', 'inet:ipv4'))) {
+        $lib.print('https://search.censys.io/search?resource=hosts&q="{value}"', value=$node.repr())
+        $lib.print('https://search.censys.io/certificates?q="{value}"', value=$utils.get_value_or_repr($node)) | spin
+    }
+
+    return($lib.null)
+}
+
+function getRobtexSources(node) {
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("https://www.robtex.com/dns-lookup/{value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
+function getIntelligenceXSources(node) {
+    if ($utils.is_in_list($node.form(), ('inet:fqdn', 'inet:ipv4', 'inet:email'))) {
+        $lib.print("https://intelx.io/?s={value}", value=$utils.get_value_or_repr($node)) | spin
+    }
+
+    return($lib.null)
+}
+
+function getShodanSources(node) {
+    if ($node.form() = 'inet:fqdn') {
+            $lib.print("https://www.shodan.io/search?query=hostname:{value}", value=$node.value()) | spin
+        }
+    elif ($node.form() = 'inet:ipv4') {
+            $lib.print("https://www.shodan.io/search?query=ip:{value}", value=$node.repr()) | spin
+        }
+    else  {
+            $lib.print("https://www.shodan.io/search?query={value}", value=$utils.get_value_or_repr($node)) | spin  // TODO: Add test for this
+        }
+
+    return($lib.null)
+}
+
+function getHackerNewsSources(node) {
+    $lib.print("https://hn.algolia.com/?dateRange=all&page=0&prefix=true&query={value}&sort=byPopularity&type=all", value=$utils.get_value_or_repr($node)) | spin
+
+    return($lib.null)
+}
+
+function getPulseDiveSources(node) {
+    $lib.print("https://pulsedive.com/") | spin
+
+    return($lib.null)
+}
+
+function getInQuestSources(node) {
+    $lib.print("https://labs.inquest.net/") | spin
+
+    return($lib.null)
+}
+
+function getUrlHausSources(node) {
+    if ($node.form() = 'inet:url') {
+        $lib.print("https://urlhaus.abuse.ch/browse.php?search={value}", value=$node.value()) | spin
+    }
+
+    return($lib.null)
+}
+
 function generatePivotingSources(node) {
     if (not $node) {
         return($lib.null)
@@ -140,7 +268,8 @@ function generatePivotingSources(node) {
 
     // Generate sources only for specific form types:
     $type = $node.form()
-    if (not $utils.is_in_list($type, ('inet:fqdn', 'inet:ipv4', 'hash:md5', 'hash:sha1', 'hash:sha256'))) {
+    if (not $utils.is_in_list($type, ('inet:fqdn', 'inet:ipv4', 'hash:md5', 'hash:sha1', 'hash:sha256', 'inet:email', 'it:app:yara:rule', 'inet:url'))) {
+        // TODO: code snippets or strings + custom nodes?
         return($lib.null)
     }
 
@@ -163,4 +292,19 @@ function generatePivotingSources(node) {
     $getCRTSHSources($node)
     $getWhoIsSources($node)
     $getWhoxySources($node)
+    $getArchiveSources($node)
+    $getSecurityTrailsSources($node)
+    $getAnyRunSources($node)
+    $getBazaarAbuseSources($node)
+    $getHashLookupCirclLuSources($node)
+    $getTriageSources($node)
+    $getMalShareSources($node)
+    $getCensysSources($node)
+    $getRobtexSources($node)
+    $getShodanSources($node)
+    $getIntelligenceXSources($node)
+    $getHackerNewsSources($node)
+    $getPulseDiveSources($node)
+    $getInQuestSources($node)
+    $getUrlHausSources($node)
 }
