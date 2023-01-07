@@ -6,13 +6,11 @@ dirname = os.path.abspath(os.path.dirname(__file__))
 
 
 class LctihTest(s_test.StormPkgTest):
-
     pkgprotos = (os.path.join(dirname, "lctih.yaml"),)
 
     async def test_lctih_explore(self):
 
         async with self.getTestCore() as core:
-
             await core.nodes("[ inet:dns:a = (example.com, 1.2.3.4) ]")
             await core.nodes('[ inet:fqdn = "example.com" +#xxx.yyy.zzz ]')
             await core.nodes(
@@ -192,10 +190,79 @@ class LctihTest(s_test.StormPkgTest):
     async def test_lctih_update_misp_clusters(self):
 
         async with self.getTestCore() as core:
-
             await core.nodes("lctih.update.misp.clusters")
 
-            # TODO: Test a sample of the nodes. This will break if the MISP cluster changes.
+            # Test a sample of the created nodes. This will break of course, if the MISP clusters change.
+            fin4 = await core.nodes("risk:threat:org:name = 'wolf spider'")
+            fin4_refs = await core.nodes(
+                "risk:threat:org:name = 'wolf spider' <(refs)- *"
+            )
+            apt39 = await core.nodes("risk:threat:org:name = apt39")
+            apt39_refs = await core.nodes("risk:threat:org:name = apt39 <(refs)- *")
+
+            self.len(1, fin4)
+            self.len(5, fin4_refs)
+            self.len(1, apt39)
+            self.len(9, apt39_refs)
+
+            fin4 = fin4[0]
+            fin4_refs = [ref.ndef for ref in fin4_refs]
+            apt39 = apt39[0]
+            apt39_refs = [ref.ndef for ref in apt39_refs]
+
+            self.eq(fin4.ndef, ("risk:threat", "6ebf4882805d303f2be800415d160553"))
+            self.eq(fin4.get("name"), "wolf spider (misp-galaxy)")
+            self.eq(fin4.get("org"), "f8c1852e78c2bdfe10b0c62be46508b9")
+            self.eq(fin4.get("org:name"), "wolf spider")
+            self.eq(
+                fin4.get("org:names"),
+                (
+                    "ff449346-aa9f-45f6-b482-71e886a5cf57",
+                    "fin4",
+                    "g0085",
+                    "wolf spider",
+                ),
+            )
+            self.isin(
+                "FIN4 is a financially-motivated threat group that has targeted confidential information",
+                fin4.get("desc"),
+            )
+            self.isin(
+                (
+                    "inet:url",
+                    "https://www.reuters.com/article/2015/06/23/us-hackers-insidertrading-idUSKBN0P31M720150623",
+                ),
+                fin4_refs,
+            )
+
+            self.eq(apt39.ndef, ("risk:threat", "c8cc675f7383ab8df3e43ceaa1c5c17d"))
+            self.eq(apt39.get("name"), "apt39 (misp-galaxy)")
+            self.eq(apt39.get("org"), "4eb2ecceb0ef95b323c711e306b82211")
+            self.eq(apt39.get("org:name"), "apt39")
+            self.eq(apt39.get("org:loc"), "ir")
+            self.eq(
+                apt39.get("org:names"),
+                (
+                    "apt39",
+                    "c2c64bd3-a325-446f-91a8-b4c0f173a30b",
+                    "chafer",
+                    "cobalt hickman",
+                    "g0087",
+                    "radio serpens",
+                    "remix kitten",
+                ),
+            )
+            self.isin(
+                "APT39 was created to bring together previous activities and methods used by this actor, and its activities largely align with a group publicly referred to as",
+                apt39.get("desc"),
+            )
+            self.isin(
+                (
+                    "inet:url",
+                    "https://go.crowdstrike.com/rs/281-OBQ-266/images/Report2020CrowdStrikeGlobalThreatReport.pdf",
+                ),
+                apt39_refs,
+            )
 
             # Same here. Is there a way to avoid to run it two times only for checking the output?
             msgs = await core.stormlist("lctih.update.misp.clusters")
