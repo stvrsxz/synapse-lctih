@@ -48,4 +48,3 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: lctih.json
-          draft: true
