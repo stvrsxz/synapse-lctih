@@ -11,7 +11,7 @@ A simple, not very smart, but useful poor man's power-up for Synapse.
 From releases:
 
 ```
-storm> pkg.load --raw storm> pkg.load --raw https://github.com/stvrsxz/synapse-lctih/releases/latest/download/synapse_lctih.json
+storm> pkg.load --raw storm> pkg.load --raw https://github.com/stvrsxz/synapse-lctih/releases/latest/download/lctih.json
 ```
 
 Or clone the repo and run the following:
