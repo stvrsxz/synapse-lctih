@@ -41,7 +41,7 @@ jobs:
       - name: Save the package configuration file as json
         run: |
           source .venv/bin/activate
-          python -m synapse.tools.genpkg --save synapse_lctih.json synapse-lctih.yaml
+          python -m synapse.tools.genpkg --save synapse_lctih.json lctih.yaml
 
       - name: Release
         uses: softprops/action-gh-release@v1
