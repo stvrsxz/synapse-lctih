@@ -57,7 +57,7 @@ class LctihTest(s_test.StormPkgTest):
             fqdn = "example.com"
             await core.nodes(f"[ inet:fqdn = {fqdn} ]")
             fqdn_msgs = await core.stormlist(
-                f"inet:fqdn={fqdn} | lctih.pivoting.sources"
+                f"inet:fqdn={fqdn} | lctih.pivoting.sources --external"
             )
             msgs.extend(fqdn_msgs)
             searchable_variable_names.append("fqdn")
@@ -65,21 +65,21 @@ class LctihTest(s_test.StormPkgTest):
             ipv4 = "1.2.3.4"
             await core.nodes(f"[ inet:ipv4 = {ipv4} ]")
             ipv4_msgs = await core.stormlist(
-                f"inet:ipv4={ipv4} | lctih.pivoting.sources"
+                f"inet:ipv4={ipv4} | lctih.pivoting.sources --external"
             )
             msgs.extend(ipv4_msgs)
             searchable_variable_names.append("ipv4")
 
             md5 = "393f175d3782d4f6b1d215bd0f31a777"
             await core.nodes(f"[ hash:md5 = {md5} ]")
-            md5_msgs = await core.stormlist(f"hash:md5={md5} | lctih.pivoting.sources")
+            md5_msgs = await core.stormlist(f"hash:md5={md5} | lctih.pivoting.sources --external")
             msgs.extend(md5_msgs)
             searchable_variable_names.append("md5")
 
             sha1 = "e281722ebc73be5ecfca93b3395ba745ec354333"
             await core.nodes(f"[ hash:sha1 =  {sha1} ]")
             sha1_msgs = await core.stormlist(
-                f"hash:sha1={sha1} | lctih.pivoting.sources"
+                f"hash:sha1={sha1} | lctih.pivoting.sources --external"
             )
             msgs.extend(sha1_msgs)
             searchable_variable_names.append("sha1")
@@ -87,7 +87,7 @@ class LctihTest(s_test.StormPkgTest):
             sha256 = "d22df444e867fdf647f6757547b2b75968453c3bb398a5d94c5e17a5e57af7f6"
             await core.nodes(f"[ hash:sha256 = {sha256} ]")
             sha256_msgs = await core.stormlist(
-                f"hash:sha256={sha256} | lctih.pivoting.sources"
+                f"hash:sha256={sha256} | lctih.pivoting.sources --external"
             )
             msgs.extend(sha256_msgs)
             searchable_variable_names.append("sha256")
@@ -95,7 +95,7 @@ class LctihTest(s_test.StormPkgTest):
             email = "test@example.com"
             await core.nodes(f"[ inet:email = {email} ]")
             email_msgs = await core.stormlist(
-                f"inet:email={email} | lctih.pivoting.sources"
+                f"inet:email={email} | lctih.pivoting.sources --external"
             )
             msgs.extend(email_msgs)
             searchable_variable_names.append("email")
@@ -103,7 +103,7 @@ class LctihTest(s_test.StormPkgTest):
             url = "https://example.com"
             await core.nodes(f"[ inet:url = '{url}' ]")
             url_msgs = await core.stormlist(
-                f"inet:url='{url}' | lctih.pivoting.sources"
+                f"inet:url='{url}' | lctih.pivoting.sources --external"
             )
             msgs.extend(url_msgs)
             searchable_variable_names.append("url")
@@ -111,7 +111,7 @@ class LctihTest(s_test.StormPkgTest):
             yara_rule = 'rule test {strings: $a = "test" condition: $a}'
             await core.nodes(f"[ it:app:yara:rule = * :text='{yara_rule}' ]")
             yara_rule_msgs = await core.stormlist(
-                f"it:app:yara:rule:text ~= test | lctih.pivoting.sources"
+                f"it:app:yara:rule:text ~= test | lctih.pivoting.sources --external"
             )
             msgs.extend(yara_rule_msgs)
 
@@ -141,6 +141,7 @@ class LctihTest(s_test.StormPkgTest):
                 'https://search.censys.io/certificates?q="{value}"': ["fqdn", "ipv4"],
                 "https://intelx.io/?s={value}": ["fqdn", "ipv4", "email"],
                 "https://completedns.com/dns-history/": ["fqdn"],
+                "gau {value}": ["fqdn"],
                 "https://www.shodan.io/search?query=hostname:{value}": ["fqdn"],
                 "https://ipinfo.io/{value}": ["ipv4"],
                 "https://www.shodan.io/search?query=ip:{value}": ["ipv4"],

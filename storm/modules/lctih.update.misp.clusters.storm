@@ -1,6 +1,9 @@
 function ingestMISPGalaxyThreatActors() {
     $threatActors = $lib.inet.http.get("https://raw.githubusercontent.com/MISP/misp-galaxy/main/clusters/threat-actor.json").json()
     $lib.print($threatActors)
-    for $threatactor
+    //for $threatActor in $threatActors.values {
+    //    $lib.print($threatActor)
+    //}
+
     // TODO: Add respective risk:threat nodes
 }

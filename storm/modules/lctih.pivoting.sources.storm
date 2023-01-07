@@ -274,6 +274,12 @@ function getViewDNSSources(node) {
     return($lib.null)
 }
 
+function getGauCommand(node){
+    if ($node.form() = 'inet:fqdn') {
+        $lib.print("gau {value}", value=$node.value()) | spin
+    }
+}
+
 function generatePivotingSources(node, external) {
     if (not $node) {
         return($lib.null)
@@ -322,8 +328,11 @@ function generatePivotingSources(node, external) {
     $getUrlHausSources($node)
     $getViewDNSSources($node)
 
+    // For now just print some commands:
+    $getGauCommand($node)
+
     if ($external) {
-        // TODO: Call external sources here.
+        // TODO: Get the external sources here.
     }
 
 }
