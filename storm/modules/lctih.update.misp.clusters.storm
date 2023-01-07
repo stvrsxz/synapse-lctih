@@ -1,9 +1,43 @@
 function ingestMISPGalaxyThreatActors() {
     $threatActors = $lib.inet.http.get("https://raw.githubusercontent.com/MISP/misp-galaxy/main/clusters/threat-actor.json").json()
-    $lib.print($threatActors)
-    //for $threatActor in $threatActors.values {
-    //    $lib.print($threatActor)
-    //}
 
-    // TODO: Add respective risk:threat nodes
+    $lib.print('Ingesting the Threat Actors MISP Galaxy')
+
+    for $threatActor in $threatActors.values {
+        // We are using a guid generated with the $lib.guid with the uuid given by the misp-galaxy as an argument
+        // in order to preserve the idempotency of the ingestion:
+        [risk:threat = $lib.guid($threatActor.uuid) :name = $lib.str.concat($threatActor.value, ' (misp-galaxy)')  :org:name= $threatActor.value]
+
+        [:org = {[ou:org = $lib.guid($threatActor.value) :name = $threatActor.value :orgtype = 'threat_actor']}]
+
+        if ($threatActor.description) {
+             [:desc = $threatActor.description]
+        }
+
+        $org_names = ($threatActor.value, $threatActor.uuid)
+        if ($threatActor.meta.synonyms) {
+             $org_names.extend($threatActor.meta.synonyms)
+        }
+        [:org:names = $org_names]
+
+        if ($threatActor.meta.country) {
+         [:org:loc = $threatActor.meta.country]
+        }
+
+        if ($threatActor.description) {
+         [:desc = $threatActor.description]
+        }
+
+        if ($threatActor.meta.refs) {
+            for $ref in $threatActor.meta.refs {
+                [<(refs)+ {[inet:url = $ref]}]
+            }
+        }
+        if ($threatActor.meta.sources) {
+            for $source in $threatActor.meta.sources {
+                [<(refs)+ {[inet:url = $source]}]
+            }
+        }
+
+    }
 }

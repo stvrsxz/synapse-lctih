@@ -2,4 +2,4 @@ init {
     $misp = $lib.import(lctih.update.misp.clusters)
 }
 
-divert $lib.true $misp.ingestMISPGalaxyThreatActors()
+divert $lib.true $misp.ingestMISPGalaxyThreatActors() | uniq

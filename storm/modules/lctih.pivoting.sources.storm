@@ -234,7 +234,7 @@ function getShodanSources(node) {
             $lib.print("https://www.shodan.io/search?query=ip:{value}", value=$node.repr()) | spin
         }
     else  {
-            $lib.print("https://www.shodan.io/search?query={value}", value=$utils.get_value_or_repr($node)) | spin  // TODO: Add test for this
+            $lib.print("https://www.shodan.io/search?query={value}", value=$utils.get_value_or_repr($node)) | spin  // TODO: Add test for this for strings
         }
 
     return($lib.null)

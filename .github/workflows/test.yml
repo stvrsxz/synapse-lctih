@@ -1,6 +1,3 @@
-
-# https://github.com/marketplace/actions/install-poetry-action .
-
 name: test synapse-lctih
 
 on:

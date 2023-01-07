@@ -29,16 +29,18 @@ commands:
     descr: Given a node, pivot in and walk, pivot out and walk and in the end pivot to tags.
 
   - name: lctih.pivoting.sources
-    descr: Given a node, print the url or call the api of possible pivoting online sources
+    descr: Given a node, print the urls of possible related pivoting sources.
 
     cmdargs:
       - - --external
         - type: bool
           default: false
           action: store_true
-          help: Call external APIs-Sources and print the results.
+          help: Also call external APIs-Sources and print the results.
 
   - name: lctih.update.misp.clusters
     descr: |
       Update the MISP galaxy threat actor cluster.
       TODO: add more clusters
+    perms:
+      - [ power-ups, lctih, user ]

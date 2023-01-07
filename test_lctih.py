@@ -72,7 +72,9 @@ class LctihTest(s_test.StormPkgTest):
 
             md5 = "393f175d3782d4f6b1d215bd0f31a777"
             await core.nodes(f"[ hash:md5 = {md5} ]")
-            md5_msgs = await core.stormlist(f"hash:md5={md5} | lctih.pivoting.sources --external")
+            md5_msgs = await core.stormlist(
+                f"hash:md5={md5} | lctih.pivoting.sources --external"
+            )
             msgs.extend(md5_msgs)
             searchable_variable_names.append("md5")
 
@@ -191,11 +193,11 @@ class LctihTest(s_test.StormPkgTest):
 
         async with self.getTestCore() as core:
 
-            # TODO: Finish and refactor this test
+            await core.nodes("lctih.update.misp.clusters")
 
-            nodes = await core.nodes("lctih.update.misp.clusters")
+            # TODO: Test a sample of the nodes. This will break if the MISP cluster changes.
+
+            # Same here. Is there a way to avoid to run it two times only for checking the output?
             msgs = await core.stormlist("lctih.update.misp.clusters")
-
-            self.stormIsInPrint("Threat Actor", msgs)
-
+            self.stormIsInPrint("Ingesting the Threat Actors MISP Galaxy", msgs)
             self.stormHasNoWarnErr(msgs)
