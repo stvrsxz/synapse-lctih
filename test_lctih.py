@@ -108,14 +108,20 @@ class LctihTest(s_test.StormPkgTest):
             msgs.extend(url_msgs)
             searchable_variable_names.append("url")
 
+            string = "is you live?"
+            await core.nodes(f"[ it:dev:str = '{string}' ]")
+            string_msgs = await core.stormlist(
+                f"it:dev:str='{string}' | lctih.pivoting.sources --external"
+            )
+            msgs.extend(string_msgs)
+            searchable_variable_names.append("string")
+
             yara_rule = 'rule test {strings: $a = "test" condition: $a}'
             await core.nodes(f"[ it:app:yara:rule = * :text='{yara_rule}' ]")
             yara_rule_msgs = await core.stormlist(
                 f"it:app:yara:rule:text ~= test | lctih.pivoting.sources --external"
             )
             msgs.extend(yara_rule_msgs)
-
-            # TODO: code snippets or strings + custom nodes?
 
             self.stormHasNoWarnErr(msgs)
 
@@ -178,6 +184,15 @@ class LctihTest(s_test.StormPkgTest):
                 "https://www.hybrid-analysis.com/yara-search": ["yara_rule"],
                 "https://bazaar.abuse.ch/account/": ["yara_rule"],
                 "https://urlhaus.abuse.ch/browse.php?search={value}": ["url"],
+                "https://www.shodan.io/search?query={value}": [
+                    "md5",
+                    "sha1",
+                    "sha256",
+                    "email",
+                    "url",
+                    "string",
+                ],
+                "https://www.hybrid-analysis.com/string-search": ["string"],
             }
 
             for source, variable_names in sources_to_variable_names.items():

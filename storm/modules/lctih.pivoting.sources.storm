@@ -4,6 +4,14 @@ init {
 
 // TODO: Eventually, migrate some sources to the respective APIs
 
+function printSeparatorMessage(node) {
+
+    $lib.print("\n[+] ============================================")
+    $lib.print("[+] Generating sources for {value}", value=$utils.get_value_or_repr($node)) | spin
+
+    return($lib.null)
+}
+
 function getGoogleSources(node) {
     if ($utils.is_in_list($node.form(), ('inet:fqdn', 'inet:ipv4'))) {
         $lib.print("https://www.google.com/search?q=site:{value}", value=$utils.get_value_or_repr($node))
@@ -67,7 +75,9 @@ function getCompleteDNSSources(node) {
 }
 
 function getVXUndergroundSources(node) {
-    $lib.print("https://www.vx-underground.org/malware.html") | spin
+    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
+        $lib.print("https://www.vx-underground.org/malware.html") | spin
+    }
     return($lib.null)
 }
 
@@ -90,8 +100,9 @@ function getHybridAnalysisSources(node) {
     elif ($node.form() = 'it:app:yara:rule') {
         $lib.print("https://www.hybrid-analysis.com/yara-search") | spin
     }
-
-    // TODO: Add "https://www.hybrid-analysis.com/string-search", for strings
+    elif ($node.form() = 'it:dev:str') {
+        $lib.print("https://www.hybrid-analysis.com/string-search") | spin
+    }
 
     return($lib.null)
 }
@@ -153,14 +164,6 @@ function getArchiveSources(node) {
 function getSecurityTrailsSources(node) {
     if ($node.form() = 'inet:fqdn') {
         $lib.print("https://securitytrails.com/domain/{value}/history/a", value=$node.value()) | spin
-    }
-
-    return($lib.null)
-}
-
-function getAnyRunSources(node) {
-    if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
-        $lib.print("https://app.any.run/submissions") | spin
     }
 
     return($lib.null)
@@ -233,8 +236,8 @@ function getShodanSources(node) {
     elif ($node.form() = 'inet:ipv4') {
             $lib.print("https://www.shodan.io/search?query=ip:{value}", value=$node.repr()) | spin
         }
-    else  {
-            $lib.print("https://www.shodan.io/search?query={value}", value=$utils.get_value_or_repr($node)) | spin  // TODO: Add test for this for strings
+    else {
+            $lib.print("https://www.shodan.io/search?query={value}", value=$utils.get_value_or_repr($node)) | spin
         }
 
     return($lib.null)
@@ -287,10 +290,12 @@ function generatePivotingSources(node, external) {
 
     // Generate sources only for specific form types:
     $type = $node.form()
-    if (not $utils.is_in_list($type, ('inet:fqdn', 'inet:ipv4', 'hash:md5', 'hash:sha1', 'hash:sha256', 'inet:email', 'it:app:yara:rule', 'inet:url'))) {
-        // TODO: code snippets or strings + custom nodes?
+    if (not $utils.is_in_list($type, ('inet:fqdn', 'inet:ipv4', 'hash:md5', 'hash:sha1', 'hash:sha256',
+                                      'inet:email', 'it:app:yara:rule', 'inet:url', 'it:dev:str'))) {
         return($lib.null)
     }
+
+    $printSeparatorMessage($node)
 
     $getGoogleSources($node)
     $getDuckDuckGoSources($node)
@@ -313,7 +318,6 @@ function generatePivotingSources(node, external) {
     $getWhoxySources($node)
     $getArchiveSources($node)
     $getSecurityTrailsSources($node)
-    $getAnyRunSources($node)
     $getBazaarAbuseSources($node)
     $getHashLookupCirclLuSources($node)
     $getTriageSources($node)

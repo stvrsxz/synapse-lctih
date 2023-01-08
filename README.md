@@ -4,14 +4,14 @@ A Little CTI Helper Synapse Rapid Power-Up.
 
 A simple, not very smart, but useful poor man's power-up for Synapse.
 
-**Caution**: This is experimental and always run it in a new view first.
+**Caution**: This is experimental and always run it in a forked view first.
 
 ## Installation:
 
 From releases:
 
 ```
-storm> pkg.load --raw storm> pkg.load --raw https://github.com/stvrsxz/synapse-lctih/releases/latest/download/lctih.json
+storm> pkg.load --raw https://github.com/stvrsxz/synapse-lctih/releases/latest/download/lctih.json
 ```
 
 Or clone the repo and run the following:
@@ -21,6 +21,8 @@ python -m synapse.tools.genpkg <lctih.yaml location> --push <your cortex telepat
 ```
 
 ## Usage:
+
+TODO: NOW Add usage gifs
 
 ### Commands:
 
