@@ -1,5 +1,5 @@
 name: lctih
-version: 1.0.1
+version: 1.1.0
 
 synapse_minversion: [ 2, 101, 0 ]
 
