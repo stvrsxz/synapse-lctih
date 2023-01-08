@@ -22,8 +22,6 @@ python -m synapse.tools.genpkg <lctih.yaml location> --push <your cortex telepat
 
 ## Usage:
 
-TODO: NOW Add usage gifs
-
 ### Commands:
 
 - `lctih.explore` - Given a node, pivot in and walk, pivot out and walk and in the end pivot to tags.
