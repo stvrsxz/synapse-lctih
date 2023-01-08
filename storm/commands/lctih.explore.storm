@@ -2,10 +2,10 @@ if ($node) {
     $node | tee
     {$lib.print("Input node:\n")}
     {$lib.print("\n") | spin}
-    {$lib.print("---\nPivoting out and walking:\n") uniq | spin  }
-    { --> *}
-    {$lib.print("---\nPivoting in and walking:\n") uniq | spin}
-    { <-- *}
+    {$lib.print("---\nPivoting out and walking:\n") | spin  }
+    { --> * | uniq}
+    {$lib.print("---\nPivoting in and walking:\n") | spin}
+    { <-- * | uniq}
     {$lib.print("---\nPivoting to tags:\n") | spin}
     { -> #}
    }
