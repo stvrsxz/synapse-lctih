@@ -70,7 +70,9 @@ function getGitHubSources(node) {
 }
 
 function getCompleteDNSSources(node) {
-    $lib.print("https://completedns.com/dns-history/") | spin
+    if ($node.form() = 'inet:fqdn') {
+            $lib.print("https://completedns.com/dns-history/") | spin
+        }
     return($lib.null)
 }
 
