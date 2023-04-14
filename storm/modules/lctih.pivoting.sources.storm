@@ -78,7 +78,8 @@ function getCompleteDNSSources(node) {
 
 function getVXUndergroundSources(node) {
     if ($utils.is_in_list($node.form(), ('hash:md5', 'hash:sha1', 'hash:sha256'))) {
-        $lib.print("https://www.vx-underground.org/malware.html") | spin
+        $lib.print("https://www.vx-underground.org/malware.html")
+        $lib.print("https://vxu.fly.dev/samples") | spin
     }
     return($lib.null)
 }

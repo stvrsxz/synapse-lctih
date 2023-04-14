@@ -175,6 +175,7 @@ class LctihTest(s_test.StormPkgTest):
                     "sha1",
                     "sha256",
                 ],
+                "https://vxu.fly.dev/samples": ["md5", "sha1", "sha256"],
                 "https://www.hybrid-analysis.com/search?query={value}": [
                     "md5",
                     "sha1",
